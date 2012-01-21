@@ -1,0 +1,26 @@
+input.span10 {
+    width: 556px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.shortener {
+    margin: 0 5em;
+}
+
+.shortener #id-shortener {
+    height: 21px;
+}
+
+.shortener #id-shortener-url {
+    background: none repeat scroll 0 0 transparent;
+    border: medium none;
+    box-shadow: 0 0 0 0;
+    cursor: text;
+}
+
+.alert-message.block-message ul.errorlist {
+    margin-bottom: 5px;
+}

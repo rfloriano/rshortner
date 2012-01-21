@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <table id="table-list-url" class="bordered-table zebra-striped">
+        <thead>
+            <tr>
+                <th>URL original</th>
+                <th>URL curta</th>
+                <th>Criado em</th>
+                <th>Visualizações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if history %}
+                {% load shortly_url %}
+                {% for bit in history %}
+                    <tr>
+                        <td>{{ bit.url }}</td>
+                        <td><a href="{{ bit.short_url|shortly_url:host }}">{{ bit.short_url|shortly_url:host }}</a></td>
+                        <td>{{ bit.created }}</td>
+                        <td>{{ bit.page_view }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                {% if user.is_authenticated %}
+                    <tr>
+                        <td id="default-message" class="text-center" colspan="4">Você nunca cadastrou uma URL aqui. Utilize o campo de texto acima para encurtar uma URL.</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td id="default-message" class="text-center" colspan="4">Você não está logado. Logue para gravar o histórico de suas URLs encurtadas.</td>
+                    </tr>
+                {% endif %}
+            {% endif %}
+        </tbody>
+    </table>
+{% endblock %}

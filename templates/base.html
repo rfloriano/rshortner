@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>rShorter</title>
+    <meta name="description" content="A url shortener as challenge globo.com's selection process">
+    <meta name="author" content="Rafael Floriano da Silva">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+    <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- styles -->
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ MEDIA_URL }}css/base.css">
+    <style type="text/css">
+    body {
+        padding-top: 40px;
+    }
+    </style>
+
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.min.js"></script>
+    <script type="text/javascript" src="{{ MEDIA_URL }}js/base.js"></script>
+
+    <!-- Fav and touch icons -->
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+</head>
+
+<body>
+    <div class="topbar">
+        <div class="fill">
+            <div class="container">
+                <a class="brand" href="{% url home-url %}">rShorter</a>
+                <ul class="nav">
+                    <li class="active"><a href="{% url home-url %}">Home</a></li>
+                    <li><a href="{% url about-url %}">Sobre</a></li>
+                    <li><a href="{% url contact-url %}">Contato</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <!-- Main hero unit for a primary marketing message or call to action -->
+        <div class="hero-unit">
+            <div class="shortener">
+                <h1>rShorter!</h1>
+                <form id="id-form-shortener" name="form-shortener" action="{% url ajax-createbit-url %}" method="post">
+                    {% csrf_token %}
+                    {% if form.url.errors %}
+                        <div id="url-errors" class="alert-message block-message error">
+                    {% else %}
+                        <div id="url-errors">
+                    {% endif %}
+                        {{ form.url.errors }}
+                        {{ form.url }}
+                        <button id="do-shortener" class="btn primary">Encurtar &raquo;</button>
+                        <input id="id-shortener-url" type="text" readonly="" class="span4">
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="span16">
+            {% block content %}{% endblock %}
+        </div>
+
+        <footer>
+            <p>&copy; rfloriano.com</p>
+        </footer>
+
+    </div> <!-- /container -->
+
+</body>
+</html>
