@@ -48,17 +48,17 @@
         <div class="hero-unit">
             <div class="shortener">
                 <h1>rShorter!</h1>
-                <form id="id-form-shortener" name="form-shortener" action="{% url ajax-createbit-url %}" method="post">
+                <form id="id_form_shortener" name="form-shortener" action="{% url ajax-createbit-url %}" method="post">
                     {% csrf_token %}
                     {% if form.url.errors %}
-                        <div id="url-errors" class="alert-message block-message error">
+                        <div id="url_errors" class="alert-message block-message error">
                     {% else %}
-                        <div id="url-errors">
+                        <div id="url_errors">
                     {% endif %}
                         {{ form.url.errors }}
                         {{ form.url }}
-                        <button id="do-shortener" class="btn primary">Encurtar &raquo;</button>
-                        <input id="id-shortener-url" type="text" readonly="" class="span4">
+                        <button id="do_shortener" class="btn primary">Encurtar &raquo;</button>
+                        <input id="id_short" type="text" readonly="" class="span4">
                     </div>
                 </form>
             </div>

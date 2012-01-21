@@ -51,8 +51,8 @@ def createBit(request):
             "created": False,
             "url": url,
             "short_url": "",
-            "created-at": "",
-            "page-view": 0,
+            "created_at": "",
+            "page_view": 0,
         }
         return HttpResponse(
             simplejson.dumps(data),
@@ -84,8 +84,8 @@ def createBit(request):
         "created": created,
         "url": bit.url,
         "short_url": "http://%s/%s" % (host, bit.short_url),
-        "created-at": bit.created.strftime("%d/%m/%Y at %H:%M"),
-        "page-view": bit.page_view,
+        "created_at": bit.created.strftime("%d/%m/%Y at %H:%M"),
+        "page_view": bit.page_view,
     }
     return HttpResponse(
         simplejson.dumps(data),

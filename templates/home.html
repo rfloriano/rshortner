@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <table id="table-list-url" class="bordered-table zebra-striped">
+    <table id="table_list_url" class="bordered-table zebra-striped">
         <thead>
             <tr>
                 <th>URL original</th>
@@ -24,11 +24,11 @@
             {% else %}
                 {% if user.is_authenticated %}
                     <tr>
-                        <td id="default-message" class="text-center" colspan="4">Você nunca cadastrou uma URL aqui. Utilize o campo de texto acima para encurtar uma URL.</td>
+                        <td id="default_message" class="text_center" colspan="4">Você nunca cadastrou uma URL aqui. Utilize o campo de texto acima para encurtar uma URL.</td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td id="default-message" class="text-center" colspan="4">Você não está logado. Logue para gravar o histórico de suas URLs encurtadas.</td>
+                        <td id="default_message" class="text_center" colspan="4">Você não está logado. Logue para gravar o histórico de suas URLs encurtadas.</td>
                     </tr>
                 {% endif %}
             {% endif %}

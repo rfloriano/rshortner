@@ -2,7 +2,7 @@ input.span10 {
     width: 556px;
 }
 
-.text-center {
+.text_center {
     text-align: center;
 }
 
@@ -10,11 +10,11 @@ input.span10 {
     margin: 0 5em;
 }
 
-.shortener #id-shortener {
+.shortener #id_url {
     height: 21px;
 }
 
-.shortener #id-shortener-url {
+.shortener #id_short {
     background: none repeat scroll 0 0 transparent;
     border: medium none;
     box-shadow: 0 0 0 0;
