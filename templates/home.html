@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
+{% include 'shortener.html' %}
+<div class="span16">
     <table id="table_list_url" class="bordered-table zebra-striped">
         <thead>
             <tr>
@@ -18,20 +20,21 @@
                         <td>{{ bit.url }}</td>
                         <td><a href="{{ bit.short_url|shortly_url:host }}">{{ bit.short_url|shortly_url:host }}</a></td>
                         <td>{{ bit.created }}</td>
-                        <td>{{ bit.page_view }}</td>
+                        <td>{{ bit.click }}</td>
                     </tr>
                 {% endfor %}
             {% else %}
                 {% if user.is_authenticated %}
                     <tr>
-                        <td id="default_message" class="text_center" colspan="4">Você nunca cadastrou uma URL aqui. Utilize o campo de texto acima para encurtar uma URL.</td>
+                        <td id="default_message" class="data_not_find text_center" colspan="4">Você nunca cadastrou uma URL aqui. Utilize o campo de texto acima para encurtar uma URL.</td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td id="default_message" class="text_center" colspan="4">Você não está logado. Logue para gravar o histórico de suas URLs encurtadas.</td>
+                        <td id="default_message" class="data_not_find text_center" colspan="4">Você não está logado. <a href="{% url login-url %}">Logue</a> para gravar o histórico de suas URLs encurtadas.</td>
                     </tr>
                 {% endif %}
             {% endif %}
         </tbody>
     </table>
+</div>
 {% endblock %}

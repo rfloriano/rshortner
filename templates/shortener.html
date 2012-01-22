@@ -1,0 +1,25 @@
+<script type="text/javascript">
+    can_add_rows = {% if user.is_authenticated %}true{% else %}false{% endif %};
+</script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.min.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}js/base.js"></script>
+
+<!-- Main hero unit for a primary marketing message or call to action -->
+<div class="hero-unit">
+    <div class="shortener">
+        <h1>rShorter!</h1>
+        <form id="id_form_shortener" name="form-shortener" action="{% url ajax-createbit-url %}" method="post">
+            {% csrf_token %}
+            {% if form.url.errors %}
+                <div id="messages" class="alert-message block-message error">
+            {% else %}
+                <div id="messages">
+            {% endif %}
+                {{ form.url.errors }}
+                {{ form.url }}
+                <button id="do_shortener" class="btn primary">Encurtar &raquo;</button>
+                <input id="id_short" type="text" readonly="" class="span4">
+            </div>
+        </form>
+    </div>
+</div>

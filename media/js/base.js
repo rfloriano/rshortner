@@ -1,19 +1,26 @@
-function Shortener(id_form, id_table, id_errors, opts){
+function Shortener(id_form, id_table, messages, opts){
     var self = this;
 
     var default_options = {
         id_url: "id_url",
-        id_short: "id_short"
+        id_short: "id_short",
+        errors_class: "alert-message block-message error",
+        success_class: "alert-message block-message success",
+        remove_too: null,
+        can_add_rows: false
     }
     self.options = $.extend(default_options, opts);
 
     self.fields = {};
     self.ul_errors = "ul_errors";
+    self.ul_success = "ul_success";
+    self_short_url = "short_url";
+    self._order = ["url", self_short_url, "created_at", "page_view"];
 
-    self.__init__ = function(id_form, id_table, id_errors){
+    self.__init__ = function(id_form, id_table, messages){
         self.form = $("#"+id_form);
         self.table = $("#"+id_table);
-        self.errors = $("#"+id_errors);
+        self.messages = $("#"+messages);
 
         self._getFieldsFromForm();
         self._bind_events();
@@ -30,27 +37,30 @@ function Shortener(id_form, id_table, id_errors, opts){
     }
 
     self._addTableRow = function(data){
-        self._clearErrors();
+        if (!self.options.can_add_rows){
+            return null;
+        };
+        self._clearMessages();
         self.clear_url();
-        var order = ["url", "short_url", "created_at", "page_view"];
         td = "<tr>";
-        for (o in order){
-            if (order[o] == "short_url"){
-                td += '<td><a href="'+data[order[o]]+'">'+ data[order[o]] +'</a></td>';
-                self.fields.short.val(data[order[o]]);
+        for (o in self._order){
+            if (self._order[o] == "short_url"){
+                td += '<td><a href="'+data[self._order[o]]+'">'+ data[self._order[o]] +'</a></td>';
             }else{
-                td += "<td>"+data[order[o]]+"</td>";
+                td += "<td>"+data[self._order[o]]+"</td>";
             }
         }
         td += "</tr>";
         self.table.prepend(td);
         self.table.find("#default-message").remove();
-        self.fields.short.select();
+        if (self.options.remove_too){
+            $("."+ self.options.remove_too).remove();
+        }
     }
 
     self._clearErrors = function(){
         $("#"+self.ul_errors).remove();
-        self.errors.removeClass("alert-message block-message error");
+        self.messages.removeClass(self.options.errors_class);
     }
 
     self._markErrors = function(data){
@@ -62,11 +72,34 @@ function Shortener(id_form, id_table, id_errors, opts){
     }
 
     self._markError = function(li){
-        self._clearErrors();
+        self._clearMessages();
         $ul = $('<ul id="'+ self.ul_errors +'"/>');
         $ul.append(li);
-        self.errors.prepend($ul);
-        self.errors.addClass("alert-message block-message error");
+        self.messages.prepend($ul);
+        self.messages.addClass(self.options.errors_class);
+    }
+
+    self._clearSuccess = function(){
+        $("#"+self.ul_success).remove();
+        self.messages.removeClass(self.options.success_class);
+    }
+
+    self._markSuccess = function(li){
+        self._clearMessages();
+        $ul = $('<ul id="'+ self.ul_success +'"/>');
+        $ul.append(li);
+        self.messages.prepend($ul);
+        self.messages.addClass(self.options.success_class);
+    }
+
+    self._clearMessages = function(){
+        self._clearErrors();
+        self._clearSuccess();
+    }
+
+    self._selectShortenerUrl = function(data){
+        self.fields.short.val(data[self_short_url]);
+        self.fields.short.select();
     }
 
     self.clear = function(){
@@ -92,9 +125,23 @@ function Shortener(id_form, id_table, id_errors, opts){
                 self.clear_url();
                 if (data.created){
                     self._addTableRow(data);
+                    self._selectShortenerUrl(data);
+                    message = "<li>URL criada com sucesso! Você pode pressionar ctrl+c para copiar a sua URL"
+                    if (!self.options.can_add_rows){
+                        message += " e acompanhar as estatísicas abaixo."
+                    };
+                    message += "</li>"
+                    self._markSuccess(message);
+                }else if (data.short_url){
+                    self._selectShortenerUrl(data);
+                    message = "<li>Esta URL já existia em nosso banco de dados. Nós a encontramos para você. Você pode pressionar ctrl+c para copiar a sua URL"
+                    if (!self.options.can_add_rows){
+                        message += " e acompanhar as estatísicas abaixo."
+                    };
+                    message += "</li>"
+                    self._markSuccess(message);
                 }
-                else if (data.short_url == ""
-                     &&  data.errors.url.length > 0
+                else if (data.errors.url.length > 0
                 ){
                     self._markErrors(data);
                 }
@@ -107,9 +154,18 @@ function Shortener(id_form, id_table, id_errors, opts){
         return false;
     }
 
-    return self.__init__(id_form, id_table, id_errors);
+    return self.__init__(id_form, id_table, messages);
 }
 
 $(document).ready(function(){
-    shortener = new Shortener("id_form_shortener", "table_list_url", "url_errors");
+    shortener = new Shortener(
+        "id_form_shortener", 
+        "table_list_url", 
+        "messages", 
+        {
+            can_add_rows: can_add_rows, 
+            remove_too: "data_not_find"
+        }
+    );
 });
+

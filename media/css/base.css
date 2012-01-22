@@ -2,6 +2,10 @@ input.span10 {
     width: 556px;
 }
 
+.topbar p {
+    color: #BFBFBF;
+}
+
 .text_center {
     text-align: center;
 }
@@ -23,4 +27,35 @@ input.span10 {
 
 .alert-message.block-message ul.errorlist {
     margin-bottom: 5px;
+}
+
+.login-wrapper {
+    margin-top: 18px;
+}
+
+.login {
+    margin: 0 auto;
+    width: 460px;
+}
+
+.login fieldset {
+    border: 1px solid #EEEEEE;
+    padding: 18px;
+}
+
+.login fieldset p {
+    text-align: center;
+}
+
+.login fieldset label {
+    width: 60px;
+}
+
+.login input{
+    margin-left: 10px;
+}
+
+.login-errors {
+    margin: 0 auto 18px;
+    width: 300px;
 }

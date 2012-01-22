@@ -20,9 +20,6 @@
     }
     </style>
 
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/jquery.min.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}js/base.js"></script>
-
     <!-- Fav and touch icons -->
     <link rel="shortcut icon" href="images/favicon.ico">
     <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
@@ -40,33 +37,24 @@
                     <li><a href="{% url about-url %}">Sobre</a></li>
                     <li><a href="{% url contact-url %}">Contato</a></li>
                 </ul>
+                {% if user.is_authenticated %}
+                    <p class="pull-right">Logado como: {{ user }} | <a href="{% url logout-url %}">sair</a></p>
+                {% else %}
+                    <p class="pull-right">
+                        <a href="{% url login-url %}">Login</a>
+                    </p>
+                {% endif %}
             </div>
         </div>
     </div>
     <div class="container">
-        <!-- Main hero unit for a primary marketing message or call to action -->
-        <div class="hero-unit">
-            <div class="shortener">
-                <h1>rShorter!</h1>
-                <form id="id_form_shortener" name="form-shortener" action="{% url ajax-createbit-url %}" method="post">
-                    {% csrf_token %}
-                    {% if form.url.errors %}
-                        <div id="url_errors" class="alert-message block-message error">
-                    {% else %}
-                        <div id="url_errors">
-                    {% endif %}
-                        {{ form.url.errors }}
-                        {{ form.url }}
-                        <button id="do_shortener" class="btn primary">Encurtar &raquo;</button>
-                        <input id="id_short" type="text" readonly="" class="span4">
-                    </div>
-                </form>
+        {% if message %}
+            <div class="alert-message block-message {{ message_type }}">
+                <p>{{ message }}</p>
             </div>
-        </div>
+        {% endif %}
 
-        <div class="span16">
-            {% block content %}{% endblock %}
-        </div>
+        {% block content %}{% endblock %}
 
         <footer>
             <p>&copy; rfloriano.com</p>

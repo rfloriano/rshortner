@@ -5,6 +5,8 @@ from django.conf.urls.defaults import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+from shortener.forms import AuthForm
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'project.views.home', name='home'),
@@ -14,12 +16,14 @@ urlpatterns = patterns('',
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    url(r'^$', 'shorter.views.renderHome', name='home-url'),
-    url(r'^about/$', 'shorter.views.renderHome', name='about-url'),
-    url(r'^contact/$', 'shorter.views.renderHome', name='contact-url'),
-    url(r'^_ajax/create-shortener/$', 'shorter.views.createBit', name='ajax-createbit-url'),
+    url(r'^$', 'shortener.views.renderHome', name='home-url'),
+    url(r'^about/$', 'shortener.views.renderHome', name='about-url'),
+    url(r'^contact/$', 'shortener.views.renderHome', name='contact-url'),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name': 'login.html', 'authentication_form': AuthForm}, name="login-url"),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/'}, name="logout-url"),
+    url(r'^_ajax/create-shortener/$', 'shortener.views.createBit', name='ajax-createbit-url'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^(?P<bit>[\w_-]+)/$', 'shorter.views.renderBit'),
+    url(r'^(?P<bit>[\w_-]+)/$', 'shortener.views.renderBit'),
 )
 
 if settings.DEBUG:

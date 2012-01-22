@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="span16 login-wrapper">
+    <div class="login">
+        <form method="post" action="{% url login-url %}">
+            <fieldset>
+                {% if form.errors %}
+                    <div class="alert-message block-message warning login-errors">
+                        <p>Usuário ou senha errado. Tente novamente.</p>
+                    </div>
+                {% endif %}
+            
+                {% csrf_token %}
+
+                <p>{{ form.username.label_tag }}{{ form.username }}</p>
+                <p>{{ form.password.label_tag }}{{ form.password }}</p>
+
+                <p><button class="btn" type="submit">Acessar</button></p>
+                <input type="hidden" name="next" value="{{ next }}" />
+            </fieldset>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -123,7 +123,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'shorter'
+    'shortener'
 )
 
 # A sample logging configuration. The only tangible logging
@@ -148,3 +148,7 @@ LOGGING = {
         },
     }
 }
+
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
+LOGIN_REDIRECT_URL = '/'

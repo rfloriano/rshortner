@@ -4,8 +4,8 @@ from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.template import RequestContext
 from django.utils import simplejson
 
-from shorter.models import Bit
-from shorter.forms import BitForm
+from shortener.models import Bit
+from shortener.forms import BitForm
 
 
 def renderHome(request):
@@ -30,7 +30,7 @@ def renderHome(request):
 
 def renderBit(request, bit):
     bit = get_object_or_404(Bit, short_url=bit)
-    bit.increment_page_view()
+    bit.increment_click()
     return redirect(bit, permanent=True)
 
 
@@ -59,33 +59,36 @@ def createBit(request):
             'application/javascript'
         )
 
+    bit = form.save(commit=False)
+
     params = {
-        "url": url,
+        "url": bit.url,
     }
+
+    user = request.user
+    params["user"] = user if user.is_authenticated() else None
 
     try:
         bit = Bit.objects.get(**params)
         created = False
     except Bit.DoesNotExist:
         created = True
-
-    bit = form.save(commit=False)
     # bit, created = Bit.objects.get_or_create(url=url)
 
-    user = request.user
     if user.is_authenticated():
         bit.user = user
-        params["user"] = user
 
-    bit.save()
+    if created:
+        bit.save()
+
     host = request.META['HTTP_HOST']
     data = {
         "errors": errors,
         "created": created,
         "url": bit.url,
         "short_url": "http://%s/%s" % (host, bit.short_url),
-        "created_at": bit.created.strftime("%d/%m/%Y at %H:%M"),
-        "page_view": bit.page_view,
+        "created_at": "%s" % bit.created,
+        "page_view": bit.click,
     }
     return HttpResponse(
         simplejson.dumps(data),
