@@ -1,0 +1,13 @@
+[
+    {
+        "pk": 1, 
+        "model": "shortener.bit", 
+        "fields": {
+            "url": "rfloriano.com", 
+            "short_url": "2yq5", 
+            "user": 1, 
+            "click": 0, 
+            "created": "2012-01-22 02:18:06"
+        }
+    }
+]

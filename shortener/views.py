@@ -36,7 +36,7 @@ def renderBit(request, bit):
 
 def createBit(request):
     if not request.is_ajax():
-        raise Exception("Only ajax call is permited")
+        raise OnlyAjaxException("Only ajax call is permited")
 
     url = request.POST.get('url', None)
     if not url:
@@ -94,3 +94,7 @@ def createBit(request):
         simplejson.dumps(data),
         'application/javascript'
     )
+
+
+class OnlyAjaxException(Exception):
+    pass

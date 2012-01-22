@@ -21,12 +21,28 @@ class Bit(models.Model):
 
     def increment_click(self):
         self.click += 1
-        self.save()
+        self.save(force=True)
+
+    def save(self, force=False, *args, **kwargs):
+        if not self.user and not force:
+            bit = None
+            try:
+                bit = Bit.objects.get(url=self.url)
+            except Bit.DoesNotExist:
+                pass
+            finally:
+                if bit:
+                    raise DuplicateTupleException("User and url must be unique together")
+        super(Bit, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Bit'
-        # unique_together = ('url', 'user',)
+        unique_together = ('url', 'user')
         ordering = ["-created"]
+
+
+class DuplicateTupleException(Exception):
+    pass
 
 
 # TODO: getBrowser request.META['HTTP_USER_AGENT']
