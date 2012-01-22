@@ -19,6 +19,7 @@ urlpatterns = patterns('',
     url(r'^$', 'shortener.views.renderHome', name='home-url'),
     url(r'^about/$', 'shortener.views.renderHome', name='about-url'),
     url(r'^contact/$', 'shortener.views.renderHome', name='contact-url'),
+    url(r'^statistics/(?P<bit>[\w_-]+)/$', 'shortener.views.renderStatistic', name='statistic-url'),
     url(r'^login/$',
         'django.contrib.auth.views.login',
         {

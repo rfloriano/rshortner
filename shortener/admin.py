@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from shortener.models import Bit
+from shortener.models import Bit, StatisticsBit
 
 
 class AdminBit(admin.ModelAdmin):
@@ -9,4 +9,10 @@ class AdminBit(admin.ModelAdmin):
     exclude = ["short_url", "click"]
 
 
+class AdminStatisticsBit(admin.ModelAdmin):
+    model = StatisticsBit
+    list_display = ["plataform", "browser", "geolocalization", "bit", "created_at"]
+
+
 admin.site.register(Bit, AdminBit)
+admin.site.register(StatisticsBit, AdminStatisticsBit)

@@ -15,7 +15,7 @@ function Shortener(id_form, id_table, messages, opts){
     self.ul_errors = "ul_errors";
     self.ul_success = "ul_success";
     self_short_url = "short_url";
-    self._order = ["url", self_short_url, "created_at", "page_view"];
+    self._order = ["url", self_short_url, "created_at", "page_view", "details"];
 
     self.__init__ = function(id_form, id_table, messages){
         self.form = $("#"+id_form);
@@ -46,6 +46,8 @@ function Shortener(id_form, id_table, messages, opts){
         for (o in self._order){
             if (self._order[o] == "short_url"){
                 td += '<td><a href="'+data[self._order[o]]+'">'+ data[self._order[o]] +'</a></td>';
+            }else if (self._order[o] == "details"){
+                td += '<td><a href="'+data[self._order[o]]+'">Detalhes</a></td>';
             }else{
                 td += "<td>"+data[self._order[o]]+"</td>";
             }

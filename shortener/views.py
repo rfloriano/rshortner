@@ -3,9 +3,11 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.template import RequestContext
 from django.utils import simplejson
+from django.db.models import Count
 
 from shortener.models import Bit, StatisticsBit
 from shortener.forms import BitForm
+from shortener.templatetags.shortly_url import naturaltime
 
 
 def renderHome(request):
@@ -31,11 +33,34 @@ def renderHome(request):
 def renderBit(request, bit):
     bit = get_object_or_404(Bit, short_url=bit)
     bit.increment_click()
-    # if request.user.is_authenticated():
-    #     statistic = StatisticsBit(bit=bit)
-    #     statistic.process_request(request)
-    #     statistic.save()
+    if bit.user:
+        statistic = StatisticsBit(bit=bit)
+        statistic.process_request(request)
+        statistic.save()
     return redirect(bit, permanent=True)
+
+
+def renderStatistic(request, bit):
+    bit = get_object_or_404(Bit, short_url=bit)
+    host = request.META['HTTP_HOST']
+    statistics = bit.statistics()
+    by_os = statistics.values('plataform').annotate(dcount=Count('plataform'))
+    by_browser = statistics.values('browser').annotate(dcount=Count('browser'))
+    by_geolocalization = statistics.values('geolocalization').annotate(dcount=Count('geolocalization'))
+    by_date = statistics.order_by('-created_at')[:7].values('created_at').annotate(dcount=Count('geolocalization'))
+
+    return render_to_response(
+        'statistic.html',
+        {
+            "bit": bit,
+            "host": host,
+            "by_os": by_os,
+            "by_browser": by_browser,
+            "by_geolocalization": by_geolocalization,
+            "by_date": by_date,
+        },
+        context_instance=RequestContext(request)
+    )
 
 
 def createBit(request):
@@ -57,6 +82,7 @@ def createBit(request):
             "short_url": "",
             "created_at": "",
             "page_view": 0,
+            "details": "",
         }
         return HttpResponse(
             simplejson.dumps(data),
@@ -72,9 +98,9 @@ def createBit(request):
     user = request.user
     params["user"] = user if user.is_authenticated() else None
 
+    created = False
     try:
         bit = Bit.objects.get(**params)
-        created = False
     except Bit.DoesNotExist:
         created = True
     # bit, created = Bit.objects.get_or_create(url=url)
@@ -91,14 +117,14 @@ def createBit(request):
         "created": created,
         "url": bit.url,
         "short_url": "http://%s/%s" % (host, bit.short_url),
-        "created_at": "%s" % bit.created,
+        "created_at": naturaltime(bit.created),
         "page_view": bit.click,
+        "details": bit.get_statistic_url(),
     }
     return HttpResponse(
         simplejson.dumps(data),
         'application/javascript'
     )
-
 
 class OnlyAjaxException(Exception):
     pass

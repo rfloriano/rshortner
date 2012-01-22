@@ -10,6 +10,7 @@
                 <th>URL curta</th>
                 <th>Criado em</th>
                 <th>Visualizações</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -19,18 +20,19 @@
                     <tr>
                         <td>{{ bit.url }}</td>
                         <td><a href="{{ bit.short_url|shortly_url:host }}">{{ bit.short_url|shortly_url:host }}</a></td>
-                        <td>{{ bit.created }}</td>
+                        <td>{{ bit.created|naturaltime }}</td>
                         <td>{{ bit.click }}</td>
+                        <td><a href="{{ bit.get_statistic_url }}">Detalhes</a></td>
                     </tr>
                 {% endfor %}
             {% else %}
                 {% if user.is_authenticated %}
                     <tr>
-                        <td id="default_message" class="data_not_find text_center" colspan="4">Você nunca cadastrou uma URL aqui. Utilize o campo de texto acima para encurtar uma URL.</td>
+                        <td id="default_message" class="data_not_find text_center" colspan="5">Você nunca cadastrou uma URL aqui. Utilize o campo de texto acima para encurtar uma URL.</td>
                     </tr>
                 {% else %}
                     <tr>
-                        <td id="default_message" class="data_not_find text_center" colspan="4">Você não está logado. <a href="{% url login-url %}">Logue</a> para gravar o histórico de suas URLs encurtadas.</td>
+                        <td id="default_message" class="data_not_find text_center" colspan="5">Você não está logado. <a href="{% url login-url %}">Logue</a> para gravar o histórico de suas URLs encurtadas.</td>
                     </tr>
                 {% endif %}
             {% endif %}

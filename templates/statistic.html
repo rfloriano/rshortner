@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% load shortly_url %}
+
+{% block extrahead %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Dia');
+        data.addColumn('number', 'Clicks');
+        data.addRows([
+            {% for date in by_date %}
+                ['{{ date|date:"SHORT_DATE_FORMAT" }}', {{ date.dcount }}],
+            {% endfor %}
+        ]);
+
+        var options = {
+          title: 'Gráfico de clicks por dia',
+          vAxis: {title: 'Dia',  titleTextStyle: {color: 'red'}}
+        };
+
+        var chart = new google.visualization.BarChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="span16">
+    <ul class="breadcrumb">
+        <li>
+            <a href="{% url home-url %}">Home</a>
+            <span class="divider">/</span>
+        </li>
+        <li class="active">Estatísticas para {{ bit.short_url|shortly_url:host }}</li>
+    </ul>
+    <table>
+        <tr>
+            <th>URL longa:</th>
+            <td>{{ bit.get_absolute_url }}</td>
+        </tr>
+        <tr>
+            <th>URL curta:</th>
+            <td>{{ bit.short_url|shortly_url:host }}</td>
+        </tr>
+        <tr>
+            <th>Criado:</th>
+            <td>{{ bit.created|naturaltime }}</td>
+        </tr>
+        <tr>
+            <th>Clicks:</th>
+            <td>{{ bit.click }}</td>
+        </tr>
+    </table>
+
+    <div id="chart_div"></div>
+</div>
+
+<div class="row show-grid" title="Irregular three column layout">
+    <div class="span-one-third">
+        <h3>Por país</h3>
+        <table>
+            {% if by_geolocalization %}
+                {% for country in by_geolocalization %}
+                    <tr>
+                        <th>{{ country.geolocalization }}</th>
+                        <td>{{ country.dcount }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td id="default_message" class="data_not_find text_center" colspan="2">Não há dados</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <div class="span-one-third">
+        <h3>Por plataforma</h3>
+        <table>
+            {% if by_os %}
+                {% for os in by_os %}
+                    <tr>
+                        <th>{{ os.plataform }}</th>
+                        <td>{{ os.dcount }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td id="default_message" class="data_not_find text_center" colspan="2">Não há dados</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <div class="span-one-third">
+        <h3>Por país</h3>
+        <table>
+            {% if by_browser %}
+                {% for browser in by_browser %}
+                    <tr>
+                        <th>{{ browser.browser }}</th>
+                        <td>{{ browser.dcount }}</td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td id="default_message" class="data_not_find text_center" colspan="2">Não há dados</td>
+                </tr>
+            {% endif %}
+        </table>
+    </div>
+</div>
+{% endblock %}
