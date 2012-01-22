@@ -6,7 +6,14 @@ from shortener.models import Bit
 
 
 class BitForm(forms.ModelForm):
-    url = forms.URLField(widget=forms.TextInput(attrs={'class': 'span6', 'placeholder': "Digite aqui sua URL"}))
+    url = forms.URLField(
+        widget=forms.TextInput(
+            attrs={
+                'class': 'span6',
+                'placeholder': "Digite aqui sua URL"
+            }
+        )
+    )
 
     class Meta:
         model = Bit
@@ -14,5 +21,20 @@ class BitForm(forms.ModelForm):
 
 
 class AuthForm(AuthenticationForm):
-    username = forms.CharField(label=_("Username"), max_length=30, widget=forms.TextInput(attrs={'class': 'span6'}))
-    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput(attrs={'class': 'span6'}))
+    username = forms.CharField(
+        label=_("Username"),
+        max_length=30,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'span6'
+            }
+        )
+    )
+    password = forms.CharField(
+        label=_("Password"),
+        widget=forms.PasswordInput(
+            attrs={
+                'class': 'span6'
+            }
+        )
+    )

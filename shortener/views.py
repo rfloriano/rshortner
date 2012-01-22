@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.template import RequestContext
 from django.utils import simplejson
 
-from shortener.models import Bit
+from shortener.models import Bit, StatisticsBit
 from shortener.forms import BitForm
 
 
@@ -31,6 +31,10 @@ def renderHome(request):
 def renderBit(request, bit):
     bit = get_object_or_404(Bit, short_url=bit)
     bit.increment_click()
+    # if request.user.is_authenticated():
+    #     statistic = StatisticsBit(bit=bit)
+    #     statistic.process_request(request)
+    #     statistic.save()
     return redirect(bit, permanent=True)
 
 

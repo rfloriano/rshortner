@@ -23,5 +23,9 @@ class ViewsTest(TestCase):
         except OnlyAjaxException:
             pass
 
-        resp = self.client.post('/_ajax/create-shortener/', {}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        resp = self.client.post(
+            '/_ajax/create-shortener/',
+            {},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
         self.assertContains(resp, "You need send a url argument", 1)
